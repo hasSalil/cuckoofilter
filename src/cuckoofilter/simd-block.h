@@ -85,7 +85,7 @@ SimdBlockFilter::~SimdBlockFilter() noexcept {
 
 // The SIMD reinterpret_casts technically violate C++'s strict aliasing rules. However, we
 // compile with -fno-strict-aliasing.
-[[gnu::always_inline]] inline __m256i SimdBlockFilter::MakeMask(
+inline __m256i SimdBlockFilter::MakeMask(
     const uint32_t hash) noexcept {
   const __m256i ones = _mm256_set1_epi32(1);
   // Odd contants for hashing:
@@ -101,7 +101,7 @@ SimdBlockFilter::~SimdBlockFilter() noexcept {
   return _mm256_sllv_epi32(ones, hash_data);
 }
 
-[[gnu::always_inline]] inline void SimdBlockFilter::Add(const uint64_t key) noexcept {
+inline void SimdBlockFilter::Add(const uint64_t key) noexcept {
   const auto hash = ::cuckoofilter::HashUtil::TwoIndependentMultiplyShift(key);
   const uint32_t bucket_idx = hash & directory_mask_;
   const __m256i mask = MakeMask(hash >> log_num_buckets_);
@@ -109,7 +109,7 @@ SimdBlockFilter::~SimdBlockFilter() noexcept {
   _mm256_store_si256(bucket, _mm256_or_si256(*bucket, mask));
 }
 
-[[gnu::always_inline]] inline bool SimdBlockFilter::Find(const uint64_t key) const
+inline bool SimdBlockFilter::Find(const uint64_t key) const
     noexcept {
   const auto hash = ::cuckoofilter::HashUtil::TwoIndependentMultiplyShift(key);
   const uint32_t bucket_idx = hash & directory_mask_;

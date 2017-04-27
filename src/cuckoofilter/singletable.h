@@ -57,6 +57,7 @@ class SingleTable {
     ss << "\t\tAssociativity: " << kTagsPerBucket << "\n";
     ss << "\t\tTotal # of rows: " << num_buckets_ << "\n";
     ss << "\t\tTotal # slots: " << SizeInTags() << "\n";
+    ss << "\t\tData: 0 " << buckets_[0].bits_ << "1 " << buckets_[1].bits_ << "2 " << buckets_[2].bits_ << "3 " << buckets_[3].bits_ << "4 " << buckets_[4].bits_ << "\n";
     return ss.str();
   }
 
@@ -189,6 +190,7 @@ class SingleTable {
                                 const bool kickout, uint32_t &oldtag) {
     for (size_t j = 0; j < kTagsPerBucket; j++) {
       if (ReadTag(i, j) == 0) {
+        printf("writing tag\n");
         WriteTag(i, j, tag);
         return true;
       }

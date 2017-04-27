@@ -2,6 +2,7 @@
 #define CUCKOO_FILTER_CUCKOO_FILTER_H_
 
 #include <assert.h>
+#include <string>
 
 #include "debug.h"
 #include "hashutil.h"
@@ -29,7 +30,7 @@ const size_t kMaxCuckooCount = 500;
 //   TableType: the storage of table, SingleTable by default, and
 // PackedTable to enable semi-sorting
 template <typename ItemType, size_t bits_per_item,
-          template <size_t> class TableType = SingleTable>
+          template <size_t> class TableType>
 class CuckooFilter {
   // Storage of items
   TableType<bits_per_item> *table_;
@@ -114,6 +115,13 @@ class CuckooFilter {
   // size of the filter in bytes.
   size_t SizeInBytes() const { return table_->SizeInBytes(); }
 };
+
+/*
+class SemiSortedStringCuckooFilterNineBit : public CuckooFilter<std::string, 9, PackedTable> {
+  public:
+    explicit SemiSortedStringCuckooFilterNineBit(const size_t x):CuckooFilter(x) {}
+};
+*/
 
 template <typename ItemType, size_t bits_per_item,
           template <size_t> class TableType>
@@ -235,5 +243,8 @@ std::string CuckooFilter<ItemType, bits_per_item, TableType>::Info() const {
   }
   return ss.str();
 }
+
+//using SemiSortedStringCuckooFilterNineBit = cuckoofilter::CuckooFilter<std::string, 9, PackedTable>;
+//typedef  cuckoofilter::CuckooFilter<std::string, 9, PackedTable> SemiSortedStringCuckooFilterNineBit;
 }  // namespace cuckoofilter
 #endif  // CUCKOO_FILTER_CUCKOO_FILTER_H_
