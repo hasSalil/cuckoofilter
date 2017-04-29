@@ -2,13 +2,13 @@
 OPT = -O3 -DNDEBUG
 #OPT = -g -ggdb
 
-CXXFLAGS += -fno-strict-aliasing -Wall -std=c++11 -I. -I../src/ $(OPT) -march=native
+CXXFLAGS += -fno-strict-aliasing -Wall -std=c++11 -I. -I../src/cuckoofilter/ $(OPT) -march=native
 
 LDFLAGS+= -Wall -lpthread -lssl -lcrypto
 
-HEADERS = $(wildcard ../src/*.h) *.h
+HEADERS = $(wildcard ../src/cuckoofilter/*.h) *.h
 
-SRC = ../src/hashutil.cc
+SRC = ../src/cuckoofilter/hashutil.cc
 
 .PHONY: all
 

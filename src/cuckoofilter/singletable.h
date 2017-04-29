@@ -190,7 +190,6 @@ class SingleTable {
                                 const bool kickout, uint32_t &oldtag) {
     for (size_t j = 0; j < kTagsPerBucket; j++) {
       if (ReadTag(i, j) == 0) {
-        printf("writing tag\n");
         WriteTag(i, j, tag);
         return true;
       }

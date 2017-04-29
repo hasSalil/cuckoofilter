@@ -27,8 +27,6 @@ const size_t kMaxCuckooCount = 500;
 // template parameters:
 //   ItemType:  the type of item you want to insert
 //   bits_per_item: how many bits each item is hashed into
-//   TableType: the storage of table, SingleTable by default, and
-// PackedTable to enable semi-sorting
 template <typename ItemType, size_t bits_per_item>
 class CuckooFilter {
   // Storage of items
@@ -115,13 +113,6 @@ class CuckooFilter {
   size_t SizeInBytes() const { return table_->SizeInBytes(); }
 };
 
-/*
-class SemiSortedStringCuckooFilterNineBit : public CuckooFilter<std::string, 9, PackedTable> {
-  public:
-    explicit SemiSortedStringCuckooFilterNineBit(const size_t x):CuckooFilter(x) {}
-};
-*/
-
 template <typename ItemType, size_t bits_per_item>
 Status CuckooFilter<ItemType, bits_per_item>::Add(
     const ItemType &item) {
@@ -133,9 +124,6 @@ Status CuckooFilter<ItemType, bits_per_item>::Add(
   }
 
   GenerateIndexTagHash(item, &i, &tag);
-  std::stringstream ss;
-  ss << "index: " << i << ", tag: " << tag << "\n";
-  printf("%s", ss.str().c_str());
   return AddImpl(i, tag);
 }
 
@@ -150,11 +138,9 @@ Status CuckooFilter<ItemType, bits_per_item>::AddImpl(
     bool kickout = count > 0;
     oldtag = 0;
     if (table_->InsertTagToBucket(curindex, curtag, kickout, oldtag)) {
-      printf("put into i1\n");
       num_items_++;
       return Ok;
     }
-    printf("need to kick? %t\n", kickout);
     if (kickout) {
       curtag = oldtag;
     }
@@ -181,10 +167,6 @@ Status CuckooFilter<ItemType, bits_per_item>::Contain(
 
   found = victim_.used && (tag == victim_.tag) &&
           (i1 == victim_.index || i2 == victim_.index);
-
-  std::stringstream ss;
-  ss << "index1: " << i1 <<", index2: " << i2 << ", tag: " << tag << "\n";
-  printf("%s", ss.str().c_str());
 
   if (found || table_->FindTagInBuckets(i1, i2, tag)) {
     return Ok;
@@ -247,7 +229,5 @@ std::string CuckooFilter<ItemType, bits_per_item>::Info() const {
   return ss.str();
 }
 
-//using SemiSortedStringCuckooFilterNineBit = cuckoofilter::CuckooFilter<std::string, 9, PackedTable>;
-//typedef  cuckoofilter::CuckooFilter<std::string, 9, PackedTable> SemiSortedStringCuckooFilterNineBit;
 }  // namespace cuckoofilter
 #endif  // CUCKOO_FILTER_CUCKOO_FILTER_H_
