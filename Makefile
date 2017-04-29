@@ -4,14 +4,14 @@ CC = g++
 #OPT = -O3 -DNDEBUG
 OPT = -g -ggdb
 
-CFLAGS += -fno-strict-aliasing -Wall -c -I. -I./include -I/usr/include/ -I./src/ $(OPT)
+CFLAGS += -fno-strict-aliasing -Wall -c -I. -I./include -I/usr/include/ -I./src/cuckoofilter/ $(OPT)
 
 LDFLAGS+= -Wall -lpthread -lssl -lcrypto
 
 LIBOBJECTS = \
-	./src/hashutil.o \
+	./src/cuckoofilter/hashutil.o \
 
-HEADERS = $(wildcard src/*.h)
+HEADERS = $(wildcard src/cuckoofilter/*.h)
 
 TEST = test
 

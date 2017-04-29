@@ -1,0 +1,25 @@
+%module cuckoofilter  //name of the resulting GO package
+#define __attribute__(x)
+%include <stl.i>
+
+#if defined(SWIGWORDSIZE64)
+typedef unsigned long int   uint64_t;
+#else
+typedef unsigned long long int  uint64_t;
+#endif
+%{
+#include "simple-cuckoofilter.h"
+%}
+
+%include "std_string.i"
+%include "debug.h"
+%include "hashutil.h"
+%include "packedtable.h"
+%include "printutil.h"
+%include "singletable.h"
+%include "bitsutil.h"
+%include "permencoding.h"
+%include "simple-cuckoofilter.h"
+
+%template(CuckooFilterEightBit) cuckoofilter::CuckooFilter<uint64_t, 8>;
+%template(CuckooFilterTwelveBit) cuckoofilter::CuckooFilter<uint64_t, 12>;
